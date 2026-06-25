@@ -1,0 +1,17 @@
+{
+  "experimentalServices": {
+    "frontend": {
+      "root": "frontend",
+      "entrypoint": ".",
+      "routePrefix": "/",
+      "framework": "vite"
+    }
+  },
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [{ "key": "X-Content-Type-Options", "value": "nosniff" }]
+    }
+  ]
+}

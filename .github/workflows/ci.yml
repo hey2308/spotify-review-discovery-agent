@@ -60,6 +60,6 @@ jobs:
       - name: Validate render.yaml
         run: test -f render.yaml
       - name: Validate vercel.json
-        run: python -c "import json; json.load(open('frontend/vercel.json'))"
+        run: python -c "import json; json.load(open('vercel.json'))"
       - name: Validate API-only install (Render build)
         run: pip install ./backend

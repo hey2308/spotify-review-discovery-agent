@@ -35,7 +35,7 @@ There is **no Docker**, **no scheduler**, and **no recurring pipeline** in produ
 **Config files already in the repo:**
 
 - [`render.yaml`](../render.yaml) — Render Blueprint (Postgres + API web service)
-- [`frontend/vercel.json`](../frontend/vercel.json) — SPA rewrites for client-side routing
+- [`vercel.json`](../vercel.json) — monorepo frontend service (SPA rewrites); backend stays on Render
 
 ---
 
@@ -225,19 +225,17 @@ curl https://YOUR-API.onrender.com/api/meta
 ### Step 5 — Deploy the frontend on Vercel
 
 1. In Vercel: **Add New Project** → import the Git repo.
-2. **Root Directory:** `frontend`
-3. **Framework Preset:** Vite
-4. **Build Command:** `npm run build` (default)
-5. **Output Directory:** `dist` (default)
-6. **Environment variable:**
+2. When prompted for a monorepo layout, accept the **`experimentalServices`** config from root [`vercel.json`](../vercel.json) — **frontend only** (do not add `backend`; API runs on Render).
+3. Set project **Framework** to **Services** if Vercel asks (required for `experimentalServices`).
+4. **Environment variable:**
 
    | Name | Value |
    |---|---|
    | `VITE_API_BASE_URL` | `https://spotify-discovery-api.onrender.com` |
 
-7. Deploy.
+5. Deploy.
 
-[`frontend/vercel.json`](../frontend/vercel.json) already configures SPA fallback (`/* → /index.html`) so section navigation works on refresh.
+Root [`vercel.json`](../vercel.json) defines only the `frontend` service (`root: frontend`, Vite) plus SPA fallback (`/* → /index.html`).
 
 ### Step 6 — Wire CORS (final)
 
