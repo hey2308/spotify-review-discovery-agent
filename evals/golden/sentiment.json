@@ -1,0 +1,62 @@
+[
+  {
+    "text": "I never find new music. Spotify discovery is completely broken and stale.",
+    "sentiment_label": "negative",
+    "rating": 1,
+    "source": "play_store"
+  },
+  {
+    "text": "Recommendations keep repeating the same artists every single day.",
+    "sentiment_label": "negative",
+    "rating": 2,
+    "source": "app_store"
+  },
+  {
+    "text": "Discover Weekly used to be great but now it feels repetitive.",
+    "sentiment_label": "negative",
+    "rating": 2,
+    "source": "social"
+  },
+  {
+    "text": "The algorithm is awful. I want to explore new genres but get the same playlists.",
+    "sentiment_label": "negative",
+    "rating": 1,
+    "source": "play_store"
+  },
+  {
+    "text": "Love Spotify Premium. Best app for listening to my favorite songs.",
+    "sentiment_label": "positive",
+    "rating": 5,
+    "source": "play_store"
+  },
+  {
+    "text": "Great sound quality and easy to use. No complaints.",
+    "sentiment_label": "positive",
+    "rating": 5,
+    "source": "app_store"
+  },
+  {
+    "text": "Works fine for playing albums I already know.",
+    "sentiment_label": "neutral",
+    "rating": 3,
+    "source": "play_store"
+  },
+  {
+    "text": "Decent app. I mostly listen to the same playlist on commute.",
+    "sentiment_label": "neutral",
+    "rating": 3,
+    "source": "app_store"
+  },
+  {
+    "text": "Shuffle mode is frustrating when I want to hear a full album in order.",
+    "sentiment_label": "negative",
+    "rating": 2,
+    "source": "play_store"
+  },
+  {
+    "text": "Amazing recommendations lately, found so many new artists.",
+    "sentiment_label": "positive",
+    "rating": 5,
+    "source": "social"
+  }
+]

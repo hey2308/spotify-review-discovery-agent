@@ -1,0 +1,18 @@
+{
+  "posts": [
+    {
+      "uri": "at://social/post-1",
+      "record": {
+        "text": "Spotify discovery is broken for me. username: djfan",
+        "createdAt": "2026-01-05T08:00:00.000Z"
+      }
+    }
+  ],
+  "statuses": [
+    {
+      "id": "mastodon-1",
+      "content": "I use Reddit instead of Spotify to find new music.",
+      "created_at": "2026-01-06T08:00:00.000Z"
+    }
+  ]
+}

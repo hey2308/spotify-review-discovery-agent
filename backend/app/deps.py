@@ -1,0 +1,11 @@
+from collections.abc import Generator
+
+from sqlalchemy.orm import Session
+
+from db.session import get_db as _get_db
+
+SessionDep = Session
+
+
+def get_db() -> Generator[Session, None, None]:
+    yield from _get_db()

@@ -1,0 +1,15 @@
+[
+  {
+    "id": "reddit-post-1",
+    "title": "Why is Spotify discovery so bad lately?",
+    "selftext": "I only hear the same songs. reviewer: @musiclover",
+    "created_utc": 1771056000,
+    "comments": [
+      {
+        "id": "comment-1",
+        "body": "Try listening to smaller playlists outside the algorithm.",
+        "created_utc": 1771059600
+      }
+    ]
+  }
+]

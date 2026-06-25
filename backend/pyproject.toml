@@ -1,0 +1,74 @@
+[project]
+name = "spotify-discovery-backend"
+version = "0.1.0"
+description = "Spotify Discovery Intelligence Agent — backend API and pipeline"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "sqlalchemy>=2.0.36",
+    "alembic>=1.14.0",
+    "psycopg[binary]>=3.2.0",
+    "pydantic>=2.10.0",
+    "pydantic-settings>=2.6.0",
+]
+
+[project.optional-dependencies]
+pipeline = [
+    "groq>=0.13.0",
+    "chromadb>=0.5.23",
+    "sentence-transformers>=3.3.0",
+    "umap-learn>=0.5.6",
+    "hdbscan>=0.8.38",
+    "numpy>=2.0.0",
+    "httpx>=0.28.0",
+    "typer>=0.15.0",
+    "feedparser>=6.0.11",
+    "google-play-scraper>=1.2.7",
+    "langdetect>=1.0.9",
+    "praw>=7.8.0",
+]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.24.0",
+    "ruff>=0.8.0",
+    "mypy>=1.13.0",
+    "types-requests>=2.32.0",
+]
+
+[project.scripts]
+ingest = "ingestion.cli:main"
+analyze = "pipeline.cli:main"
+
+[build-system]
+requires = ["setuptools>=75.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*", "core*", "db*", "ingestion*", "pipeline*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = false
+ignore_missing_imports = true
+
+[tool.ruff.lint.per-file-ignores]
+"db/migrations/**/*.py" = ["E501"]
+"ingestion/connectors/**/*.py" = ["E501"]
+"core/prompts/**/*.py" = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+markers = [
+    "integration: requires DATABASE_URL / external services",
+    "groq: requires GROQ_API_KEY",
+]

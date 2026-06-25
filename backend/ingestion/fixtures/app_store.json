@@ -1,0 +1,24 @@
+{
+  "feed": {
+    "entry": [
+      {
+        "id": { "label": "app-review-1" },
+        "title": { "label": "Discovery is broken" },
+        "content": {
+          "label": "I never find new music. Email me at user@example.com or DM @spotifyfan"
+        },
+        "im:rating": { "label": "2" },
+        "updated": { "label": "Sat, 15 Mar 2026 12:00:00 GMT" }
+      },
+      {
+        "id": { "label": "app-review-2" },
+        "title": { "label": "Same playlists every day" },
+        "content": {
+          "label": "Recommendations keep repeating the same artists."
+        },
+        "im:rating": { "label": "3" },
+        "updated": { "label": "Sat, 15 Mar 2026 12:00:00 GMT" }
+      }
+    ]
+  }
+}

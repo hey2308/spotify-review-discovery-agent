@@ -1,0 +1,16 @@
+[
+  {
+    "reviewId": "gp-review-1",
+    "userName": "Alex",
+    "content": "Spotify discovery feels stale and repetitive every week. device id: abc123xyz789",
+    "score": 2,
+    "at": "2026-02-10T10:00:00+00:00"
+  },
+  {
+    "reviewId": "gp-review-2",
+    "userName": "Jamie",
+    "content": "Spotify discovery feels stale and repetitive every week. device id: abc123xyz789",
+    "score": 2,
+    "at": "2026-02-10T10:00:00+00:00"
+  }
+]

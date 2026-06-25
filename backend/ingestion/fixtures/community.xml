@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Spotify Community</title>
+    <item>
+      <title>Cannot discover new artists</title>
+      <link>https://community.spotify.com/t5/example/1</link>
+      <guid>community-thread-1</guid>
+      <pubDate>Sat, 15 Mar 2026 09:00:00 GMT</pubDate>
+      <description>Release radar keeps showing the same tracks. Phone: 555-123-4567</description>
+    </item>
+  </channel>
+</rss>
