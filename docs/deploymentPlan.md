@@ -169,12 +169,7 @@ cd backend
 python -c "from db.session import get_engine; print(get_engine().connect().exec_driver_sql('SELECT 1').scalar())"
 ```
 
-**Optional hardening:** add a Render pre-deploy hook so migrations run on every API deploy:
-
-```yaml
-# render.yaml — add under the web service
-preDeployCommand: alembic upgrade head
-```
+> **Note:** Render **free tier** does not support `preDeployCommand`, so migrations cannot run automatically on deploy. Always run `make migrate` locally against Render Postgres before the API goes live.
 
 ### Step 3 — Run the one-time pipeline (populate Postgres)
 
