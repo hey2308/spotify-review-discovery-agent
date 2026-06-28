@@ -8,7 +8,10 @@ from sqlalchemy.orm import Session, selectinload
 from app.schemas.quotes import PaginatedQuotes, QuoteFilters, QuoteItem
 from app.services import resolve_active_run
 from core.bot_filter import sql_bot_exclusion_clauses
-from core.discovery_filter import sql_discovery_inclusion_clauses, sql_discovery_priority
+from core.discovery_filter import (
+    sql_recommendation_priority,
+    sql_strict_recommendation_clauses,
+)
 from db.models import Analysis, FeedbackItem, FeedbackTheme, Theme
 
 ThemeLinkMap = dict[uuid.UUID, list[tuple[uuid.UUID, str]]]
@@ -40,6 +43,13 @@ def list_quotes(session: Session, filters: QuoteFilters) -> PaginatedQuotes:
         .outerjoin(Analysis, Analysis.feedback_item_id == FeedbackItem.id)
         .options(selectinload(FeedbackItem.analysis))
         .where(sql_bot_exclusion_clauses(FeedbackItem.text))
+        .where(
+            sql_strict_recommendation_clauses(
+                text_column=FeedbackItem.text,
+                intent_column=Analysis.intent,
+                behavior_signals_column=Analysis.behavior_signals,
+            )
+        )
     )
 
     if filters.theme_id is not None:
@@ -75,25 +85,18 @@ def list_quotes(session: Session, filters: QuoteFilters) -> PaginatedQuotes:
             )
         )
 
-    if filters.discovery_only:
-        query = query.where(
-            sql_discovery_inclusion_clauses(
-                text_column=FeedbackItem.text,
-                intent_column=Analysis.intent,
-                behavior_signals_column=Analysis.behavior_signals,
-            )
-        )
-
     count_query = select(func.count()).select_from(query.order_by(None).subquery())
     total = session.scalar(count_query) or 0
     total_pages = math.ceil(total / page_size) if total else 0
 
-    order_columns = [FeedbackItem.item_date.desc(), FeedbackItem.id.asc()]
-    if filters.discovery_only:
-        order_columns = [
-            sql_discovery_priority(intent_column=Analysis.intent),
-            *order_columns,
-        ]
+    order_columns = [
+        sql_recommendation_priority(
+            intent_column=Analysis.intent,
+            text_column=FeedbackItem.text,
+        ),
+        FeedbackItem.item_date.desc(),
+        FeedbackItem.id.asc(),
+    ]
 
     items = list(
         session.scalars(

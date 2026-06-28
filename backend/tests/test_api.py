@@ -151,8 +151,8 @@ def test_quotes_contract(seeded_client: TestClient):
     assert response.status_code == 200
     payload = response.json()
 
-    assert payload["total"] == 12
-    assert len(payload["items"]) == 12
+    assert payload["total"] == 7
+    assert len(payload["items"]) == 7
     first = payload["items"][0]
     assert first["text"]
     assert first["source"]
@@ -166,15 +166,14 @@ def test_quotes_filter_by_theme(seeded_client: TestClient):
     response = seeded_client.get("/api/quotes", params={"theme_id": str(THEME_UI_ID)})
     assert response.status_code == 200
     payload = response.json()
-    assert payload["total"] == 2
-    assert all(str(THEME_UI_ID) in item["theme_ids"] for item in payload["items"])
+    assert payload["total"] == 0
 
 
 def test_quotes_filter_by_source(seeded_client: TestClient):
     response = seeded_client.get("/api/quotes", params={"source": "play_store"})
     assert response.status_code == 200
     payload = response.json()
-    assert payload["total"] == 5
+    assert payload["total"] == 3
     assert all(item["source"] == "play_store" for item in payload["items"])
 
 
@@ -182,7 +181,7 @@ def test_quotes_filter_by_rating(seeded_client: TestClient):
     response = seeded_client.get("/api/quotes", params={"rating": 2})
     assert response.status_code == 200
     payload = response.json()
-    assert payload["total"] == 3
+    assert payload["total"] == 1
     assert all(item["rating"] == 2 for item in payload["items"])
 
 
@@ -193,7 +192,7 @@ def test_quotes_filter_by_date_range(seeded_client: TestClient):
     )
     assert response.status_code == 200
     payload = response.json()
-    assert payload["total"] == 3
+    assert payload["total"] == 2
 
 
 def test_quotes_search(seeded_client: TestClient):
@@ -204,23 +203,33 @@ def test_quotes_search(seeded_client: TestClient):
     assert "Discover Weekly" in payload["items"][0]["text"]
 
 
-def test_quotes_filter_discovery_only(seeded_client: TestClient):
-    all_quotes = seeded_client.get("/api/quotes", params={"discovery_only": False, "page_size": 100})
-    discovery_quotes = seeded_client.get(
-        "/api/quotes",
-        params={"discovery_only": True, "page_size": 100},
-    )
-    assert all_quotes.status_code == 200
-    assert discovery_quotes.status_code == 200
-    assert discovery_quotes.json()["total"] <= all_quotes.json()["total"]
-    assert discovery_quotes.json()["total"] > 0
+def test_quotes_returns_recommendation_related_only(seeded_client: TestClient):
+    response = seeded_client.get("/api/quotes", params={"page_size": 100})
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["total"] > 0
+    for item in payload["items"]:
+        text = item["text"].lower()
+        assert any(
+            term in text
+            for term in (
+                "recommend",
+                "discover",
+                "algorithm",
+                "discover weekly",
+                "release radar",
+                "daily mix",
+                "new music",
+                "new artist",
+            )
+        )
 
 
 def test_quotes_pagination_is_stable(seeded_client: TestClient):
     page_size = 5
     collected: list[str] = []
 
-    for page in range(1, 4):
+    for page in range(1, 3):
         response = seeded_client.get(
             "/api/quotes",
             params={"page": page, "page_size": page_size},
@@ -229,8 +238,8 @@ def test_quotes_pagination_is_stable(seeded_client: TestClient):
         payload = response.json()
         collected.extend(item["id"] for item in payload["items"])
 
-    assert len(collected) == 12
-    assert len(set(collected)) == 12
+    assert len(collected) == 7
+    assert len(set(collected)) == 7
 
 
 def test_segments_contract(seeded_client: TestClient):

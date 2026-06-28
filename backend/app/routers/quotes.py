@@ -22,7 +22,6 @@ def read_quotes(
     date_from: date | None = None,
     date_to: date | None = None,
     q: str | None = Query(default=None, min_length=1, max_length=200),
-    discovery_only: bool = False,
     page: int = Query(default=1, ge=1),
     page_size: int = Query(default=20, ge=1, le=100),
 ) -> PaginatedQuotes:
@@ -35,7 +34,6 @@ def read_quotes(
         date_from=date_from,
         date_to=date_to,
         q=q,
-        discovery_only=discovery_only,
         page=page,
         page_size=page_size,
     )

@@ -77,7 +77,6 @@ type QuoteQuery = {
   q?: string;
   source?: string;
   theme_id?: string;
-  discovery_only?: boolean;
   rating_min?: number;
   rating_max?: number;
 };

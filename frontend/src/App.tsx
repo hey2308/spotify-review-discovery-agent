@@ -32,7 +32,7 @@ type DashboardState = {
   quotes: Awaited<ReturnType<typeof fetchQuotes>>;
 };
 
-const DEFAULT_QUERY = { page: 1, page_size: 25, discovery_only: true };
+const DEFAULT_QUERY = { page: 1, page_size: 25 };
 
 function formatNumber(value: number): string {
   return Intl.NumberFormat("en-US").format(value);
@@ -65,7 +65,6 @@ export default function App() {
   const [query, setQuery] = useState<{
     q?: string;
     source?: string;
-    discovery_only?: boolean;
     page: number;
     page_size: number;
   }>(DEFAULT_QUERY);
@@ -277,11 +276,10 @@ export default function App() {
               <div className="section-head">
                 <div>
                   <h2>Verbatim Quote Explorer</h2>
-                  <p>Discovery and recommendation feedback from real users</p>
+                  <p>Recommendation-related feedback from real users</p>
                 </div>
                 <span className="muted">
-                  Showing {quotes.items.length} of {formatNumber(quotes.total)}{" "}
-                  {query.discovery_only !== false ? "discovery-related " : ""}quotes
+                  Showing {quotes.items.length} of {formatNumber(quotes.total)} recommendation-related quotes
                 </span>
               </div>
               <div className="filters">
@@ -305,19 +303,6 @@ export default function App() {
                       {source}
                     </option>
                   ))}
-                </select>
-                <select
-                  value={query.discovery_only === false ? "all" : "discovery"}
-                  onChange={(event) =>
-                    setQuery((prev) => ({
-                      ...prev,
-                      discovery_only: event.target.value === "discovery",
-                      page: 1,
-                    }))
-                  }
-                >
-                  <option value="discovery">Topic: Discovery &amp; recommendations</option>
-                  <option value="all">Topic: All reviews</option>
                 </select>
                 <button
                   className="pill-btn"

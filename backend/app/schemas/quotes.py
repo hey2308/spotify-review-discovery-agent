@@ -35,6 +35,5 @@ class QuoteFilters(BaseModel):
     date_from: date | None = None
     date_to: date | None = None
     q: str | None = None
-    discovery_only: bool = False
     page: int = 1
     page_size: int = 20
