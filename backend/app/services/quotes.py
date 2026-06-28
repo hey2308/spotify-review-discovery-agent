@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session, selectinload
 from app.schemas.quotes import PaginatedQuotes, QuoteFilters, QuoteItem
 from app.services import resolve_active_run
 from core.bot_filter import sql_bot_exclusion_clauses
+from core.discovery_filter import sql_discovery_inclusion_clauses
 from db.models import Analysis, FeedbackItem, FeedbackTheme, Theme
 
 ThemeLinkMap = dict[uuid.UUID, list[tuple[uuid.UUID, str]]]
@@ -71,6 +72,15 @@ def list_quotes(session: Session, filters: QuoteFilters) -> PaginatedQuotes:
             or_(
                 FeedbackItem.text.ilike(pattern),
                 FeedbackItem.title.ilike(pattern),
+            )
+        )
+
+    if filters.discovery_only:
+        query = query.where(
+            sql_discovery_inclusion_clauses(
+                text_column=FeedbackItem.text,
+                intent_column=Analysis.intent,
+                behavior_signals_column=Analysis.behavior_signals,
             )
         )
 

@@ -32,7 +32,7 @@ type DashboardState = {
   quotes: Awaited<ReturnType<typeof fetchQuotes>>;
 };
 
-const DEFAULT_QUERY = { page: 1, page_size: 25 };
+const DEFAULT_QUERY = { page: 1, page_size: 25, discovery_only: true };
 
 function formatNumber(value: number): string {
   return Intl.NumberFormat("en-US").format(value);
@@ -62,9 +62,13 @@ function scrollToSection(sectionId: string) {
 }
 
 export default function App() {
-  const [query, setQuery] = useState<{ q?: string; source?: string; page: number; page_size: number }>(
-    DEFAULT_QUERY,
-  );
+  const [query, setQuery] = useState<{
+    q?: string;
+    source?: string;
+    discovery_only?: boolean;
+    page: number;
+    page_size: number;
+  }>(DEFAULT_QUERY);
   const [draftSearch, setDraftSearch] = useState("");
   const [activeSection, setActiveSection] = useState<string>(SECTION_NAV[0].id);
   const [state, setState] = useState<
@@ -273,7 +277,7 @@ export default function App() {
               <div className="section-head">
                 <div>
                   <h2>Verbatim Quote Explorer</h2>
-                  <p>Raw feedback filtered by AI sentiment analysis</p>
+                  <p>Discovery and recommendation feedback from real users</p>
                 </div>
                 <span className="muted">
                   Showing {quotes.items.length} of {quotes.total} quotes
@@ -300,6 +304,19 @@ export default function App() {
                       {source}
                     </option>
                   ))}
+                </select>
+                <select
+                  value={query.discovery_only === false ? "all" : "discovery"}
+                  onChange={(event) =>
+                    setQuery((prev) => ({
+                      ...prev,
+                      discovery_only: event.target.value === "discovery",
+                      page: 1,
+                    }))
+                  }
+                >
+                  <option value="discovery">Topic: Discovery &amp; recommendations</option>
+                  <option value="all">Topic: All reviews</option>
                 </select>
                 <button
                   className="pill-btn"

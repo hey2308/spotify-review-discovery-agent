@@ -204,6 +204,18 @@ def test_quotes_search(seeded_client: TestClient):
     assert "Discover Weekly" in payload["items"][0]["text"]
 
 
+def test_quotes_filter_discovery_only(seeded_client: TestClient):
+    all_quotes = seeded_client.get("/api/quotes", params={"discovery_only": False, "page_size": 100})
+    discovery_quotes = seeded_client.get(
+        "/api/quotes",
+        params={"discovery_only": True, "page_size": 100},
+    )
+    assert all_quotes.status_code == 200
+    assert discovery_quotes.status_code == 200
+    assert discovery_quotes.json()["total"] <= all_quotes.json()["total"]
+    assert discovery_quotes.json()["total"] > 0
+
+
 def test_quotes_pagination_is_stable(seeded_client: TestClient):
     page_size = 5
     collected: list[str] = []

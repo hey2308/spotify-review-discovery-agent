@@ -171,7 +171,32 @@ python -c "from db.session import get_engine; print(get_engine().connect().exec_
 
 > **Note:** Render **free tier** does not support `preDeployCommand`, so migrations cannot run automatically on deploy. Always run `make migrate` locally against Render Postgres before the API goes live.
 
-### Step 3 — Run the one-time pipeline (populate Postgres)
+### Step 3 — Populate Postgres (choose one)
+
+#### Option A — Copy existing local snapshot (no pipeline re-run)
+
+Use this when you already ran ingest + analyze locally against SQLite and want the same dashboard data on Render.
+
+1. Ensure local SQLite exists: `data/spotify_discovery.db`
+2. Set **Render External Database URL** as the copy target (temporarily in `.env` as `DATABASE_URL`, or pass `--target`)
+3. Apply migrations on Render if not done yet: `make migrate`
+4. Copy all tables:
+
+```powershell
+cd c:\Projects\Grad_Project\backend
+python scripts/copy_database.py --target "postgresql://USER:PASS@dpg-xxxxx.oregon-postgres.render.com/spotify_discovery"
+```
+
+Or via Makefile (reads `DATABASE_URL` from `.env`):
+
+```powershell
+make copy-db-dry-run   # preview row counts
+make copy-db           # truncate target + copy
+```
+
+Chroma embeddings stay local — the API only reads materialized Postgres tables.
+
+#### Option B — Re-run pipeline on Render Postgres
 
 Point `DATABASE_URL` at Render Postgres, then ingest and analyze:
 

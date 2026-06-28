@@ -1,4 +1,4 @@
-.PHONY: dev backend frontend migrate test lint install install-api
+.PHONY: dev backend frontend migrate test lint install install-api copy-db copy-db-dry-run
 
 BACKEND_DIR := backend
 FRONTEND_DIR := frontend
@@ -25,11 +25,17 @@ migrate:
 migrate-down:
 	cd $(BACKEND_DIR) && alembic downgrade -1
 
+copy-db:
+	cd $(BACKEND_DIR) && python scripts/copy_database.py --target "$(DATABASE_URL)"
+
+copy-db-dry-run:
+	cd $(BACKEND_DIR) && python scripts/copy_database.py --target "$(DATABASE_URL)" --dry-run
+
 ingest:
 	cd $(BACKEND_DIR) && ingest ingest --months 6
 
 analyze:
-	cd $(BACKEND_DIR) && analyze analyze --dry-run
+	cd $(BACKEND_DIR) && analyze analyze
 
 test:
 	cd $(BACKEND_DIR) && pytest -m "not integration"

@@ -1,5 +1,3 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
-
 export type OverviewResponse = {
   pipeline_run_id: string | null;
   total_items: number;
@@ -79,14 +77,34 @@ type QuoteQuery = {
   q?: string;
   source?: string;
   theme_id?: string;
+  discovery_only?: boolean;
   rating_min?: number;
   rating_max?: number;
 };
 
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? "").replace(/\/$/, "");
+
+function apiOriginHint(): string {
+  if (!API_BASE_URL) {
+    return "Set VITE_API_BASE_URL on Vercel to your Render API URL and redeploy.";
+  }
+  return `Check that ${API_BASE_URL} is running and CORS_ORIGINS on Render includes this site.`;
+}
+
 async function apiFetch<T>(path: string): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`);
+  if (!API_BASE_URL && import.meta.env.PROD) {
+    throw new Error(`API URL is not configured. ${apiOriginHint()}`);
+  }
+
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`);
+  } catch {
+    throw new Error(`Failed to fetch ${path}. ${apiOriginHint()}`);
+  }
+
   if (!response.ok) {
-    throw new Error(`Request failed (${response.status}): ${path}`);
+    throw new Error(`Request failed (${response.status}): ${path}. ${apiOriginHint()}`);
   }
   return response.json() as Promise<T>;
 }
