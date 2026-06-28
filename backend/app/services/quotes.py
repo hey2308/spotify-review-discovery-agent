@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session, selectinload
 from app.schemas.quotes import PaginatedQuotes, QuoteFilters, QuoteItem
 from app.services import resolve_active_run
 from core.bot_filter import sql_bot_exclusion_clauses
-from core.discovery_filter import sql_discovery_inclusion_clauses
+from core.discovery_filter import sql_discovery_inclusion_clauses, sql_discovery_priority
 from db.models import Analysis, FeedbackItem, FeedbackTheme, Theme
 
 ThemeLinkMap = dict[uuid.UUID, list[tuple[uuid.UUID, str]]]
@@ -88,9 +88,16 @@ def list_quotes(session: Session, filters: QuoteFilters) -> PaginatedQuotes:
     total = session.scalar(count_query) or 0
     total_pages = math.ceil(total / page_size) if total else 0
 
+    order_columns = [FeedbackItem.item_date.desc(), FeedbackItem.id.asc()]
+    if filters.discovery_only:
+        order_columns = [
+            sql_discovery_priority(intent_column=Analysis.intent),
+            *order_columns,
+        ]
+
     items = list(
         session.scalars(
-            query.order_by(FeedbackItem.item_date.desc(), FeedbackItem.id.asc())
+            query.order_by(*order_columns)
             .offset((page - 1) * page_size)
             .limit(page_size)
         ).all()

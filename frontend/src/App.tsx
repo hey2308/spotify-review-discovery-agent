@@ -280,7 +280,8 @@ export default function App() {
                   <p>Discovery and recommendation feedback from real users</p>
                 </div>
                 <span className="muted">
-                  Showing {quotes.items.length} of {quotes.total} quotes
+                  Showing {quotes.items.length} of {formatNumber(quotes.total)}{" "}
+                  {query.discovery_only !== false ? "discovery-related " : ""}quotes
                 </span>
               </div>
               <div className="filters">
